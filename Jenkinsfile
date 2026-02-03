@@ -4,6 +4,7 @@ pipeline {
   environment {
     IMAGE = "sonalmallah12/ci-cd:${BUILD_NUMBER}"
     ARGO_TOKEN = credentials('argo-token')
+    SONARQUBE_TOKEN = credentials('sonarqube-token')
   }
  
   stages {
