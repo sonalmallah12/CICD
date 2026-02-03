@@ -14,5 +14,23 @@ spec:
       command: [sh, -c]
       args:
         - |
-          kubectl apply -f argo-workflow.yaml
+          cat <<EOF | kubectl apply -f -
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: ci-cd
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: ci-cd
+            template:
+              metadata:
+                labels:
+                  app: ci-cd
+              spec:
+                containers:
+                - name: app
+                  image: sonalmallah12/ci-cd:latest
+          EOF
 
