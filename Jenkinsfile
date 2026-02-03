@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        ARGO_SERVER = "http://172.20.0.2:32407"
+        ARGO_SERVER = "http://localhost:32407"
     }
 
     stages {
