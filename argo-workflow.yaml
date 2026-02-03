@@ -14,5 +14,5 @@ spec:
       command: [sh, -c]
       args:
         - |
-          kubectl apply -f k8s.yaml
+          kubectl apply -f argo-workflow.yaml
 
