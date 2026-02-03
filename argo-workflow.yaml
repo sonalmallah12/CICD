@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: simple-ci-cd-
+  namespace: argo
+spec:
+  serviceAccountName: argo-workflow
+  entrypoint: deploy
+
+  templates:
+  - name: deploy
+    container:
+      image: bitnami/kubectl:latest
+      command: [sh, -c]
+      args:
+        - |
+          kubectl apply -f k8s.yaml
+
