@@ -9,31 +9,27 @@ spec:
 
   templates:
   - name: deploy
-    container:
-      image: bitnami/kubectl:latest
-      command: ["sh", "-c"]
-      args:
-        - |
-          cat <<EOF | kubectl apply -f -
-          apiVersion: apps/v1
-          kind: Deployment
-          metadata:
-            name: ci-cd
-            namespace: argo
-          spec:
-            replicas: 1
-            selector:
-              matchLabels:
+    resource:
+      action: create
+      manifest: |
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: ci-cd
+          namespace: argo
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              app: ci-cd
+          template:
+            metadata:
+              labels:
                 app: ci-cd
-            template:
-              metadata:
-                labels:
-                  app: ci-cd
-              spec:
-                containers:
+            spec:
+              containers:
                 - name: app
-                  image: my-docker-image:latest
+                  image: sonalmallah12/ci-cd:latest
                   ports:
-                  - containerPort: 80
-            EOF
+                    - containerPort: 80
 
