@@ -4,33 +4,15 @@ metadata:
   generateName: ci-cd-
   namespace: argo
 spec:
-  serviceAccountName: argo-workflow
+  serviceAccountName: default
   entrypoint: deploy
 
   templates:
   - name: deploy
     container:
       image: bitnami/kubectl:latest
-      command: [sh, -c]
+      command: ["sh", "-c"]
       args:
         - |
-          cat <<EOF | kubectl apply -f -
-          apiVersion: apps/v1
-          kind: Deployment
-          metadata:
-            name: ci-cd
-          spec:
-            replicas: 1
-            selector:
-              matchLabels:
-                app: ci-cd
-            template:
-              metadata:
-                labels:
-                  app: ci-cd
-              spec:
-                containers:
-                - name: app
-                  image: sonalmallah12/ci-cd:latest
-          EOF
+          kubectl apply -f argo-workflow.yaml
 
