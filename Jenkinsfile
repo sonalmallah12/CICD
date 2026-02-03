@@ -7,12 +7,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/sonalmallah12/CICD'
-            }
-        }
-
         stage('Build in Jenkins') {
             steps {
                 sh '''
