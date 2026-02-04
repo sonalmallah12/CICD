@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE = "sonalmallah12/cicd-app:v1"
+        IMAGE = "sonalmallah12/cicd:latest"
     }
 
     stages {
