@@ -1,35 +1,24 @@
 pipeline {
     agent any
 
-    environment {
-        ARGO_SERVER = "http://localhost:32407"
-    }
-
     stages {
-
-        stage('Build in Jenkins') {
+        stage('Checkout') {
             steps {
-                sh '''
-                echo "Running Build Inside Jenkins"
-                chmod +x app.sh
-                ./app.sh
-                '''
+                git 'https://github.com/sonalmallah12/CICD.git'
             }
         }
 
-        stage('Trigger Argo Workflow') {
+        stage('Build Docker Image') {
             steps {
-                withCredentials([string(credentialsId: 'argo-token', variable: 'ARGO_TOKEN')]) {
-
-                    sh '''
-                    argo submit argo-workflow.yaml \
-                      --server ${ARGO_SERVER} \
-                      --auth-token ${ARGO_TOKEN} \
-                      --watch
-                    '''
-                }
+                sh 'docker build -t sonalmallah12/ci-cd:${BUILD_NUMBER} .'
             }
         }
 
+        stage('Push Docker Image') {
+            steps {
+                sh 'docker push sonalmallah12/ci-cd:${BUILD_NUMBER}'
+            }
+        }
     }
+
 
