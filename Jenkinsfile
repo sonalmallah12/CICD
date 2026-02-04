@@ -1,5 +1,26 @@
 pipeline {
-    agent any
+    agent {
+        kubernetes {
+            yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: kaniko
+    image: gcr.io/kaniko-project/executor:latest
+    command:
+    - cat
+    tty: true
+    volumeMounts:
+    - name: docker-config
+      mountPath: /kaniko/.docker
+  volumes:
+  - name: docker-config
+    secret:
+      secretName: dockerhub-secret
+"""
+        }
+    }
 
     environment {
         IMAGE = "sonalmallah12/cicd:latest"
@@ -7,15 +28,16 @@ pipeline {
 
     stages {
 
-        stage('Build Docker Image') {
+        stage('Build and Push Image') {
             steps {
-                sh 'docker build -t $IMAGE .'
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                sh 'docker push $IMAGE'
+                container('kaniko') {
+                    sh """
+                    /kaniko/executor \
+                      --context `pwd` \
+                      --dockerfile Dockerfile \
+                      --destination $IMAGE
+                    """
+                }
             }
         }
 
